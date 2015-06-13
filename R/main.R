@@ -28,10 +28,19 @@ folder <- function(folder.name){
 
 folder(data)
 
-#read abs data
+#files in the data folder
 list.files(paste0(wd,"/data"))
 
-autisum_2012 <- read.xlsx("data/absdata_autisum_2012.xls",6)
+#read data
+autisum_2012_file <- read.xlsx("data/absdata_autisum_2012.xls",6)
+assistance_2012_file <- read.xlsx("data/absdata_needforassistance_2012.xls",1)
+assistance_2012_headers <- assistance_2012_file[,6]
+assistance_2012_headers
+x <- read.xlsx('data/absdata_needforassistance_2012.xls',2,header=FALSE)
+,skip=4) 
+
+# Trivial change
+
 
 
 
