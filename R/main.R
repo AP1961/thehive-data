@@ -27,7 +27,7 @@ folder <- function(folder.name){
 }
 
 folder(data)
-
+folder(maps)
 #files in the data folder
 list.files(paste0(wd,"/data"))
 ################################################################################
@@ -93,6 +93,9 @@ View(public_toilets)
 ##########################CLEAN AND MERGE DATASETS######################################
 
 #View(education),View(demographic),View(mesh_block_census) 
+
+#dataset 1: demographic
+
 #summarise by suburb names
 head(demographic,2)
 #rename the dataset
@@ -102,12 +105,40 @@ rename_1<-c("suburb names","age75_","poll_id","state","male_proportion",
         
 demographic <-demographic[-1,]
 names(demographic)<-rename_1
-remove_function <- function(x) {
-                                  gsub("[[:punct:]]", "", x)
-                                }  #change to regex code later
+
+# remove all special char:  gsub("[[:punct:]]", "", x)
+#convert the below code to one function using regular expression
+
+rm_specialchar_1 <- function(x) {
+                                 substring(x,2,nchar(x))
+                                }  
+
+rm_specialchar_2 <- function(x) {
+                                  substring(x,1,nchar(x)-1)
+                                }  
+
+#demographic <- mapply(rm_specialchar,long_1=demographic$long_1,lat_1=demographic$lat_2)
+long_1 <- as.data.frame(apply(as.data.frame(demographic$long_1),1, rm_specialchar_1))
+names(long_1)<-"long_1"
+lat_2 <- as.data.frame(apply(as.data.frame(demographic$lat_2),1, rm_specialchar_2))
+names(lat_2)<-"lat_2"
+
+demographic$long_1 <- long_1
+demographic$lat_2 <- lat_2
 
 
+#dataset 2: education
+education <- apply(education,2,function(x)tolower(x))
+education <- as.data.frame(education,header=TRUE)
 
+library(dplyr)
+group <- group_by(education, suburb, overallrating)
+education_summary <- summarise(group, count =n())
 
+#dataset3: mesh_block_census
+head(mesh_block_census,2)
+unique(mesh_block_census$sa2_name11)
+str(mesh_block_census)
 
-
+#dataswt4:public_toilets
+head(public_toilets,2)
