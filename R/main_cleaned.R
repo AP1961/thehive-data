@@ -188,7 +188,9 @@ dbpediaResults <- select(dbpediaResults,location,p,o)
 names(dbpediaResults) <-c("location","key","value")
 
 complete_data <- rbind(all_data,dbpediaResults)
-#write.csv(complete_data,file="complete_data.csv")
+complete_data$factType<-"basic"
+
+#write.csv(complete_data,file="data/complete_data.csv")
 
 
 
