@@ -1,4 +1,4 @@
-source("R/main.R", TRUE)
+source("R/helper.R", TRUE)
 
 pkgTest("SPARQL")
 library(SPARQL)
