@@ -5,6 +5,7 @@
     <script src="js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
     // Dummy facts
+    var json;
     var jsonFacts = [
         {
             factType: "basic",
@@ -21,7 +22,10 @@
 
     ];
     var loadJson = function() {
-        return $.getJSON("facts.json");
+        $.getJSON("/facts.json", function( data ) {
+            jsonFacts = data;
+            $('#fact').text(factGenerator());
+        });
     };
     var randomIndex = function() {
         return Math.floor( Math.random() * jsonFacts.length );
@@ -44,8 +48,7 @@
         return englishFact( randomFact );
     };
     $(document).ready(function() {
-        jsonFacts = loadJson();
-        $('#fact').text(factGenerator());
+        loadJson();
     });
     </script>
 </head>
