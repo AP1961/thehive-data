@@ -11,6 +11,11 @@ source("R/helper.R", TRUE)
 source("R/dbpedia.R", TRUE)
 
 pkgTest("xlsx")
+pkgTest("dplyr")
+pkgTest("plyr")
+pkgTest("reshape2")
+pkgTest("data.table")
+pkgTest("ggplot2")
 ################################STEP1: FUNCTIONS###################################################
 rm_specialchar_1 <- function(x) {
   substring(x,2,nchar(x))
