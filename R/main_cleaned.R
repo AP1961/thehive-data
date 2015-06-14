@@ -216,6 +216,7 @@ exclude_keys <- c(
   "<http://dbpedia.org/ontology/wikiPageRedirects>",
   "<http://dbpedia.org/property/caption>",
   "<http://dbpedia.org/ontology/wikiPageOutLinkCountCleaned>",
+  "<http://dbpedia.org/property/name>",
   "cwch",
   "pentec_",
   "rou_pro_w_",

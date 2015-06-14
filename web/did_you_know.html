@@ -2,25 +2,10 @@
 <html>
 <head>
     <title>Did you know</title>
-    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
     // Dummy facts
-    var json;
-    var jsonFacts = [
-        {
-            factType: "basic",
-            location: "Mount Druitt",
-            key: "population",
-            value: "13,000"
-        },
-        {
-            factType: "locative",
-            location: "Mount Druitt",
-            key: "train station",
-            value: "2"
-        },
-
-    ];
+    var jsonFacts;
     var loadJson = function() {
         $.getJSON( "/facts.json", function( data ) {
             jsonFacts = data;
@@ -155,7 +140,7 @@
                 interpretedKey = "percentage of the population with Internet access";
                 break;
 
-            case "d599":
+            case "d599_":
                 interpretedKey = "percentage of the population in a low income category";
                 break;
             case "d600_2499":
