@@ -16,6 +16,7 @@ pkgTest("plyr")
 pkgTest("reshape2")
 pkgTest("data.table")
 pkgTest("ggplot2")
+pkgTest("stringr")
 ################################STEP1: FUNCTIONS###################################################
 rm_specialchar_1 <- function(x) {
   substring(x,2,nchar(x))
@@ -85,8 +86,7 @@ education <- read.csv('data/early_childhood_education_and_care.csv',header=TRUE)
 education <- apply(education,2,function(x)tolower(x))
 education <- as.data.frame(education,header=TRUE)   
 
- require(plyr)
- require(stringr)
+
 education[,c(1:23)] <- colwise(str_trim)(education[, c(1:23)])                  #education raw data for maps
 
 education_summary <- education %>%
