@@ -135,10 +135,26 @@ library(dplyr)
 group <- group_by(education, suburb, overallrating)
 education_summary <- summarise(group, count =n())
 
-#dataset3: mesh_block_census
+#dataset3: mesh_block_census  (# not sure how to use this one yet)
 head(mesh_block_census,2)
 unique(mesh_block_census$sa2_name11)
 str(mesh_block_census)
 
 #dataswt4:public_toilets
 head(public_toilets,2)
+
+head(socioeconomic)
+unique(socioeconomic)
+
+names(socioeconomic) <-c("buy_house","dis_ser_","ot_ch_","islamic","lone_p_h","la_for_",
+                         "man_proportion","pentec_","uk","h_degree","trans_in","own_house","unemployment","catholic","overseas","add_ss_",
+                         "c_no_c_h","suburb_name","c_diploma","no_religion","rent_house","soc_ser_","rou_pro_w_","se_eu","ex_in_","addre_5","o_n_c_r"
+                         ,"d599_","per_ser","cwch","indigenous","state","poll_id","opfh","long_1","lat_1","long_2","lat_2","d600_2499","public_housing",
+                         "m_east","anglican","internet","d2500","bus_fin","asia","inpsw")
+
+length(socioeconomic)
+socioeconomic<-socioeconomic[-1,]
+names(socioeconomic)
+
+for_liam <- write.csv(unique(socioeconomic[,18],file="data/westernsydney_suburbnames"))
+write.csv(x, file = "")
