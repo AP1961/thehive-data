@@ -24,30 +24,30 @@ rm_specialchar_2 <- function(x) {
 ## to create a gigantic table by area (lethbridge park, mt. druitt, .....) to 
 ## include education, demographics, train services, public toilets, nearest train stations
 ## in future, we can roll this out to all areas of the country. (potential features of the model to predict the success of the business)
-View(insolvency)
+##View(insolvency)
 #insolvency by postcode
 #link key: post code
 
-View(education)
+##View(education)
 # education provider of the suburbs
 # link key: suburb names
 
-View(demographic) 
+##View(demographic) 
 #population: gender proportion, age groups, suburb names, latitute and longitute
 #link key: suburb names
 
-View(mesh_block_census)  
+##View(mesh_block_census)  
 #SA1,2,3,4 data  total dwellings of  the area, area names
 #link key: area names
 
 
 ##cross join these two tables
-View(railway_lines) 
+##View(railway_lines) 
 #railline
-View(railway_stations)
+##View(railway_stations)
 #rail way stations
 
-View(public_toilets)
+##View(public_toilets)
 #public toilet info in the area
 # link key: suburb names (the column name is town)
 ## dplyr to group by suburb names 
@@ -80,8 +80,8 @@ education <- read.csv('data/early_childhood_education_and_care.csv',header=TRUE)
 education <- apply(education,2,function(x)tolower(x))
 education <- as.data.frame(education,header=TRUE)   
 
-# require(plyr)
-# require(stringr)
+ require(plyr)
+ require(stringr)
 education[,c(1:23)] <- colwise(str_trim)(education[, c(1:23)])                  #education raw data for maps
 
 education_summary <- education %>%
@@ -170,13 +170,20 @@ names(melt_public_toilets_summary) <-c("location","key","value")
 
 #4.5 BIND ALL THE DATASETS 
 all_data <- rbind(melt_socioeconomic,melt_education_summary,melt_demographic,melt_public_toilets_summary)
-View(all_data)
-write.csv(all_data,file="rachelsdata.csv")
+#View(all_data)
+#write.csv(all_data,file="rachelsdata.csv")
 
+
+#################################STEP FINAL: CONSOLIDATE DATASETS###################
 # Liam's data
 dbpediaResults <- generateResults()
-colnames(dbpediaResults)
+#colnames(dbpediaResults)
 
+dbpediaResults <- select(dbpediaResults,location,p,o)
+names(dbpediaResults) <-c("location","key","value")
+
+complete_data <- rbind(all_data,dbpediaResults)
+#write.csv(complete_data,file="complete_data.csv")
 
 
 
