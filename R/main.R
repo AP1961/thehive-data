@@ -226,8 +226,7 @@ nrow(public_toilets_summary)
 nrow(demographic)
 nrow(education_summary)
 
-full_join
-
+melt()
 
 
 
