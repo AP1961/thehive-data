@@ -64,8 +64,6 @@ generateResults <- function() {
     df$location
     merged_data <- rbind(merged_data, df)
   }
-  print(results)
-  return (results)  
+  return (merged_data)  
 }
 
-generateResults()
