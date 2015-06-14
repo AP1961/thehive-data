@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Did you know</title>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript">
+    var jsonFacts = [
+        {
+            factType: "basic",
+            location: "Mount Druitt",
+            key: "population",
+            value: "13,000"
+        },
+        {
+            factType: "locative",
+            location: "Mount Druitt",
+            key: "train station",
+            value: "2"
+        },
+
+    ];
+    var randomIndex = function() {
+        return Math.floor( Math.random() * jsonFacts.length );
+    };
+    var englishFact = function( fact ) {
+        var text = "";
+        switch ( fact.factType ) {
+            case "basic":
+            default:
+                text = "the " + fact.key + " of " + fact.location + " is " + fact.value + ".";
+                break;
+            case "locative":
+                text = "there are " + fact.value + " " + fact.key + "s in " + fact.location + '.';
+                break;
+        }
+        return text;
+    };
+    var factGenerator = function() {
+        var randomFact = jsonFacts[ randomIndex() ];
+        return englishFact( randomFact );
+    };
+    $(document).ready(function() {
+        $('#fact').text(factGenerator());
+    });
+    </script>
+</head>
+<body>
+    <div>Did you know: <span id="fact"></span></div>
+</body>
+</html>
