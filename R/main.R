@@ -19,25 +19,25 @@ pkgTest <- function(x)
 pkgTest("xlsx")
 
 #create an empty folder to hold all data
-folder <- function(folder.name){  
-  FN <- substitute(folder.name)
-  FN <- as.character(FN)
-  x <- paste(getwd(),"/", FN, sep="")
-  dir.create(x)
-}
+# folder <- function(folder.name){  
+#   FN <- substitute(folder.name)
+#   FN <- as.character(FN)
+#   x <- paste(getwd(),"/", FN, sep="")
+#   dir.create(x)
+# }
 
-folder(data)
-folder(maps)
+# folder(data)
+# folder(maps)
 #files in the data folder
-list.files(paste0(wd,"/data"))
+# list.files(paste0(wd,"/data"))
 ################################################################################
 #read abs data
-autisum_2012_file <- read.xlsx("data/absdata_autisum_2012.xls",6)
-assistance_2012_file <- read.xlsx("data/absdata_needforassistance_2012.xls",1)
-assistance_2012_headers <- assistance_2012_file[,6]
-assistance_2012_headers
-x <- read.xlsx('data/absdata_needforassistance_2012.xls',2,header=FALSE)
-,skip=4) 
+# autisum_2012_file <- read.xlsx("data/absdata_autisum_2012.xls",6)
+# assistance_2012_file <- read.xlsx("data/absdata_needforassistance_2012.xls",1)
+# assistance_2012_headers <- assistance_2012_file[,6]
+# assistance_2012_headers
+# x <- read.xlsx('data/absdata_needforassistance_2012.xls',2,header=FALSE)
+# ,skip=4) 
 
 #read Liam's data
 #fix this function later
@@ -57,7 +57,7 @@ railway_lines <- read.csv('data/psma_railway_lines.csv',header=TRUE)
 railway_stations <- read.csv('data/psma_railway_stations.csv',header=TRUE)
 public_toilets <- read.csv('data/public_toilets_2004_2014.csv',header=FALSE)
 socioeconomic <-read.csv('data/socioeconomic_variables_by_pbc.csv',header=FALSE)
-str(demographic)
+# str(demographic)
 
 ## to create a gigantic table by area (lethbridge park, mt. druitt, .....) to 
 ## include education, demographics, train services, public toilets, nearest train stations
@@ -123,17 +123,29 @@ names(long_1)<-"long_1"
 lat_2 <- as.data.frame(apply(as.data.frame(demographic$lat_2),1, rm_specialchar_2))
 names(lat_2)<-"lat_2"
 
-demographic$long_1 <- long_1
-demographic$lat_2 <- lat_2
+drops <- c("long_1","lat_2")
+demographic <-demographic[,!(names(demographic) %in% drops)]
+demographic <-cbind(demographic,long_1,lat_2)
+
+
+
 
 
 #dataset 2: education
+education <- read.csv('data/early_childhood_education_and_care.csv',header=TRUE)
 education <- apply(education,2,function(x)tolower(x))
-education <- as.data.frame(education,header=TRUE)
+education <- as.data.frame(education,header=TRUE)   
 
-library(dplyr)
-group <- group_by(education, suburb, overallrating)
-education_summary <- summarise(group, count =n())
+# require(plyr)
+# require(stringr)
+education[,c(1:23)] <- colwise(str_trim)(education[, c(1:23)])                  #education raw data for maps
+#education <- filter(education,overallrating == "meeting nqs")
+
+education_summary <- education %>%
+  group_by(suburb) %>%
+  dplyr::summarize(child_education_provider = n())
+
+education_summary <-as.data.frame(education_summary)
 
 #dataset3: mesh_block_census  (# not sure how to use this one yet)
 head(mesh_block_census,2)
@@ -141,20 +153,87 @@ unique(mesh_block_census$sa2_name11)
 str(mesh_block_census)
 
 #dataswt4:public_toilets
-head(public_toilets,2)
+public_toilets <- read.csv('data/public_toilets_2004_2014.csv',header=FALSE)
+names(public_toilets) <-c("parking","state","address","faility_type",
+                          "icon_alt_text","sanitary_disposal",
+                          "accessible_unisex","last_update_date","location_name",
+                          "baby_change","parking_accessible","showers","toilet_type",
+                          "is_open","sharps_disposal","accessible_female","status","opening_hours_note",
+                          "accessible_note","male","payment_required","parking_note"
+                          ,"accessible_parking_note","post_code","key_required","accessible_female",
+                          "mlak","access_note","long_1","lat_1","long_2","lat_2",
+                          "female","address_note","access_limited","opening_hours_scheduale",
+                          "unisex","drinking_water","suburb_name","notes")
 
-head(socioeconomic)
-unique(socioeconomic)
+public_toilets <-public_toilets[-1,]
+long_1 <- as.data.frame(apply(as.data.frame(public_toilets$long_1),1, rm_specialchar_1))
+names(long_1)<-"long_1"
+lat_2 <- as.data.frame(apply(as.data.frame(public_toilets$lat_2),1, rm_specialchar_2))
+names(lat_2)<-"lat_2"
 
+
+drops <- c("long_1","lat_2")
+public_toilets <-public_toilets[,!(names(public_toilets) %in% drops)]
+public_toilets <-cbind(public_toilets,long_1,lat_2)
+
+public_toilets_summary <- public_toilets %>%
+  group_by(suburb_name) %>%
+  dplyr::summarize(toilets_count = n())
+
+
+#dataset5:economic dataset
 names(socioeconomic) <-c("buy_house","dis_ser_","ot_ch_","islamic","lone_p_h","la_for_",
                          "man_proportion","pentec_","uk","h_degree","trans_in","own_house","unemployment","catholic","overseas","add_ss_",
                          "c_no_c_h","suburb_name","c_diploma","no_religion","rent_house","soc_ser_","rou_pro_w_","se_eu","ex_in_","addre_5","o_n_c_r"
                          ,"d599_","per_ser","cwch","indigenous","state","poll_id","opfh","long_1","lat_1","long_2","lat_2","d600_2499","public_housing",
                          "m_east","anglican","internet","d2500","bus_fin","asia","inpsw")
 
-length(socioeconomic)
-socioeconomic<-socioeconomic[-1,]
-names(socioeconomic)
 
-for_liam <- write.csv(unique(socioeconomic[,18],file="data/westernsydney_suburbnames"))
-write.csv(x, file = "")
+socioeconomic<-socioeconomic[-1,]
+#for_liam <- write.csv(unique(socioeconomic[,18]),file="data/westernsydney_suburbnames.txt")
+long_1 <- as.data.frame(apply(as.data.frame(socioeconomic$long_1),1, rm_specialchar_1))
+names(long_1)<-"long_1"
+lat_2 <- as.data.frame(apply(as.data.frame(socioeconomic$lat_2),1, rm_specialchar_2))
+names(lat_2)<-"lat_2"
+
+
+drops <- c("long_1","lat_2")
+socioeconomic <-socioeconomic[,!(names(socioeconomic) %in% drops)]
+socioeconomic <-cbind(socioeconomic,long_1,lat_2)
+
+
+
+
+##View all datasets cleaned
+View(socioeconomic)
+View(education_summary)
+View(public_toilets)
+View(demographic)
+
+#trim all columns of all datasets before join
+ncol(socioeconomic)
+ncol(public_toilets)
+ncol(demographic)
+
+socioeconomic[,c(1:ncol(socioeconomic))] <- colwise(str_trim)(socioeconomic[, c(1:ncol(socioeconomic))])   
+public_toilets[,c(1:ncol(public_toilets))] <- colwise(str_trim)(public_toilets[, c(1:ncol(public_toilets))])
+demographic[,c(1:ncol(demographic))] <- colwise(str_trim)(demographic[, c(1:ncol(demographic))])
+public_toilets_summary[,c(1:ncol(public_toilets_summary))] <- colwise(str_trim)(public_toilets_summary[, c(1:ncol(public_toilets_summary))])
+
+#combining all four datasets
+nrow(socioeconomic)
+nrow(public_toilets_summary)
+nrow(demographic)
+nrow(education_summary)
+
+full_join
+
+
+
+
+
+
+
+
+
+
