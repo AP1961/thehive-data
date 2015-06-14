@@ -1,6 +1,6 @@
 source("R/helper.R", TRUE)
+source("R/main_cleaned.R", TRUE)
 
 pkgTest("jsonlite")
 library(jsonlite)
-c <- c(1, 2, 3)
-toJSON(c)
+toJSON(complete_data)
