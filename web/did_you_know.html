@@ -22,23 +22,211 @@
 
     ];
     var loadJson = function() {
-        $.getJSON("/facts.json", function( data ) {
+        $.getJSON( "/facts.json", function( data ) {
             jsonFacts = data;
-            $('#fact').text(factGenerator());
-        });
+            $( '#fact' ).text( factGenerator() );
+        } );
     };
     var randomIndex = function() {
         return Math.floor( Math.random() * jsonFacts.length );
     };
+    var interpretKey = function( key ) {
+        var interpretedKey = "";
+        switch ( key ) {
+            case "indigenous":
+                interpretedKey = "percentage of indigenous population"
+                break;
+            case "uk":
+                interpretedKey = "percentage of the population from the UK"
+                break;
+            case "m_east":
+                interpretedKey = "percentage of the population from the Middle East"
+                break;
+            case "asia":
+                interpretedKey = "percentage of the Asian population"
+                break;
+            case "overseas":
+                interpretedKey = "percentage of the overseas population"
+                break;
+
+            case "anglican":
+                interpretedKey = "percentage of the population identifying as Anglican"
+                break;
+            case "catholic":
+                interpretedKey = "percentage of the population identifying as Catholic"
+                break;
+            case "islamic":
+                interpretedKey = "percentage of the population identifying as Islamic"
+                break;
+            case "o_n_c_r":
+                interpretedKey = "percentage of the population identifying as other non-Christian religion"
+                break;
+            case "no_religion":
+                interpretedKey = "atheist percentage of the population"
+                break;
+
+
+            case "age0_17":
+                interpretedKey = "percentage of the population aged 0 to 17"
+                break;
+            case "age18_22":
+                interpretedKey = "percentage of the population aged 45 to 49"
+                break;
+            case "age23_34":
+                interpretedKey = "percentage of the population aged 23 to 34"
+                break;
+            case "age35_44":
+                interpretedKey = "percentage of the population aged 23 to 34"
+                break;
+            case "age45_59":
+                interpretedKey = "percentage of the population aged 45 to 59"
+                break;
+            case "age60_74":
+                interpretedKey = "percentage of the population aged 60 to 74"
+                break;
+            case "age75_":
+                interpretedKey = "percentage of the population aged 75 or more"
+                break;
+            case "man_proportion":
+                interpretedKey = "male percentage of the population"
+                break;
+            case "male_proportion":
+                interpretedKey = "male percentage of the population"
+                break;
+
+            case "h_degree":
+                interpretedKey = "percentage of the population with a higher degree"
+                break;
+            case "c_diploma":
+                interpretedKey = "percentage of the population with a certificate or diploma"
+                break;
+
+            case "own_house":
+                interpretedKey = "home ownership rate"
+                break;
+            case "buy_house":
+                interpretedKey = "home ownership rate"
+                break;
+            case "rent_house":
+                interpretedKey = "percentage of the population renting"
+                break;
+            case "public_housing":
+                interpretedKey = "percentage of the population in public housing"
+                break;
+            case "unemployment":
+                interpretedKey = "unemployment rate"
+                break;
+
+            case "la_for_":
+                interpretedKey = "labour force participation rate";
+                break;
+            case "rou_pro_w_":
+                interpretedKey = "percentage employed as routine production workers";
+                break;
+            case "in_p_s_w_":
+                interpretedKey = "percentage employed as in-person service workers";
+                break;
+            case "man_pro_":
+                interpretedKey = "percentage employed as managers or professionals";
+                break;
+            case "ex_in_":
+                interpretedKey = "percentage employed in distributive services";
+                break;
+            case "trans_in_":
+                interpretedKey = "percentage employed in distributive services";
+                break;
+            case "dis_ser_":
+                interpretedKey = "percentage employed in distributive services";
+                break;
+            case "bis_fin_":
+                interpretedKey = "percentage employed in Producer/Business Services";
+                break;
+            case "soc_ser_":
+                interpretedKey = "percentage employed in social services";
+                break;
+            case "ad_ss_":
+                interpretedKey = "percentage employed in administrative & support services";
+                break;
+            case "per_ser_":
+                interpretedKey = "percentage employed in personal services";
+                break;
+
+            case "internet":
+                interpretedKey = "percentage of the population with Internet access";
+                break;
+
+            case "d599":
+                interpretedKey = "percentage of the population in a low income category";
+                break;
+            case "d600_2499":
+                interpretedKey = "percentage of the population in middle income households";
+                break;
+            case "d2500":
+                interpretedKey = "percentage of the population in a high income category";
+                break;
+
+
+            case "<http://dbpedia.org/ontology/abstract>":
+                interpretedKey = "Wikipedia description"
+                break;
+            case "<http://dbpedia.org/property/hasPhotoCollection>":
+                interpretedKey = "photo collection"
+                break;
+            case "<http://dbpedia.org/ontology/populationTotal>":
+                interpretedKey = "total population"
+                break;
+            case "<http://xmlns.com/foaf/0.1/depiction>":
+                interpretedKey = "depiction on Wikipedia"
+                break;
+
+            case "child_education_provider":
+                interpretedKey = "number of child education providers";
+                break;
+            case "total_public_toilet":
+                interpretedKey = "number of public toilets";
+                break;
+
+            case "lone_p_h_":
+                interpretedKey = "percentage of single person households";
+                break;
+
+            default:
+                interpretedKey = key;
+        }
+        return interpretedKey;
+    };
+
+    var interpretValue = function( key, interpretedKey, value ) {
+        var interpretedValue = "";
+        switch ( key ) {
+            case "<http://dbpedia.org/property/hasPhotoCollection>":
+                var link = s.substring(0, s.length - 1);
+                interpretedValue = "<a href='" + link + "'>" + link + "</a>";
+                break;
+            case "<http://xmlns.com/foaf/0.1/depiction>":
+                var link = s.substring(0, s.length - 1);
+                interpretedValue = "<img src='" + link + "'>";
+                break;
+
+            default:
+                interpretedValue = value;
+        }
+        if ( interpretedKey.indexOf( "percentage" ) > -1 || interpretedKey.indexOf( "rate" ) > -1  )
+            interpretedValue = Math.round(new Number( interpretedValue ) * 100) / 100 + "%";
+        return interpretedValue;
+    };
+
     var englishFact = function( fact ) {
         var text = "";
+        var interpretedKey = interpretKey( fact.key );
+        var interpretedValue = interpretValue( fact.key, interpretedKey, fact.value );
         switch ( fact.factType ) {
             case "basic":
             default:
-                text = "the " + fact.key + " of " + fact.location + " is " + fact.value + ".";
+                text = "the " + interpretedKey + " of " + fact.location + " is " + interpretedValue + ".";
                 break;
             case "locative":
-                text = "there are " + fact.value + " " + fact.key + "s in " + fact.location + '.';
+                text = "there are " + interpretedValue + " " + interpretedKey + "s in " + fact.location + '.';
                 break;
         }
         return text;

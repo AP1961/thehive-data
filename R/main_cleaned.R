@@ -192,5 +192,46 @@ complete_data$factType<-"basic"
 
 #write.csv(complete_data,file="data/complete_data.csv")
 
+exclude_keys <- c(
+  "<http://www.w3.org/ns/prov#wasDerivedFrom>",
+  "<http://dbpedia.org/ontology/wikiPageExternalLink>",
+  "<http://www.w3.org/2002/07/owl#sameAs>",
+  "<http://xmlns.com/foaf/0.1/isPrimaryTopicOf>",
+  "<http://dbpedia.org/ontology/wikiPageDisambiguates>",
+  "<http://dbpedia.org/property/nearNw>",
+  "<http://dbpedia.org/property/nearSw>",
+  "<http://dbpedia.org/property/nearNe>",
+  "<http://dbpedia.org/property/nearSe>",
+  "<http://dbpedia.org/property/nearN>",
+  "<http://dbpedia.org/property/nearS>",
+  "<http://dbpedia.org/property/nearE>",
+  "<http://dbpedia.org/property/nearW>",
+  "<http://dbpedia.org/ontology/wikiPageID>",
+  "<http://www.w3.org/2003/01/geo/wgs84_pos#geometry>",
+  "<http://dbpedia.org/property/stategov>",
+  "<http://www.w3.org/2000/01/rdf-schema#label>",
+  "<http://xmlns.com/foaf/0.1/name>",
+  "<http://purl.org/dc/terms/subject>",
+  "<http://dbpedia.org/ontology/wikiPageRevisionID>",
+  "<http://dbpedia.org/ontology/wikiPageRedirects>",
+  "<http://dbpedia.org/property/caption>",
+  "<http://dbpedia.org/ontology/wikiPageOutLinkCountCleaned>",
+  "cwch",
+  "pentec_",
+  "rou_pro_w_",
+  "se_eu",
+  "c_no_c_h",
+  "lone_p_h",
+  "long_2",
+  "ot_ch_",
+  "opfh",
+  "addre_5",
+  "inpsw",
+  "lat_1",
+  "lat_2",
+  "long_1",
+  "long_2"
+)
 
+filtered_data <- complete_data[!(complete_data$key %in% exclude_keys),]
 
